@@ -12,6 +12,40 @@
       <p>このページは GitHub のリポジトリから</p>
       <p>Vercel に自動デプロイされている。</p>
       <div class="tag">browser only / 超ミニマム</div>
+      <div class="controls">
+        <p class="hint">カードにふわっとした動きを付けました。</p>
+        <button id="toggle-motion" type="button">動きを止める</button>
+      </div>
     </div>
+    <script>
+      const card = document.querySelector('.card');
+      const toggleButton = document.getElementById('toggle-motion');
+
+      let angle = 0;
+      let active = true;
+
+      const loop = () => {
+        if (active) {
+          angle += 0.015;
+          const x = Math.cos(angle) * 6;
+          const y = Math.sin(angle) * 6;
+          card.style.transform = `translate(${x}px, ${y}px)`;
+          card.style.boxShadow = `${-y}px ${Math.abs(x) + 12}px 45px rgba(15, 23, 42, 0.45)`;
+        }
+
+        requestAnimationFrame(loop);
+      };
+
+      toggleButton.addEventListener('click', () => {
+        active = !active;
+        toggleButton.textContent = active ? '動きを止める' : '動きを再開する';
+        if (!active) {
+          card.style.transform = 'translate(0, 0)';
+          card.style.boxShadow = '0 18px 45px rgba(15, 23, 42, 0.6)';
+        }
+      });
+
+      requestAnimationFrame(loop);
+    </script>
   </body>
 </html>
