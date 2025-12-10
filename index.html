@@ -7,11 +7,70 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <div class="card">
+    <main class="card">
       <h1>GitHub × Vercel デプロイテスト（from feature branch）</h1>
       <p>このページは GitHub のリポジトリから</p>
       <p>Vercel に自動デプロイされている。</p>
       <div class="tag">browser only / 超ミニマム</div>
-    </div>
+
+      <section class="controls">
+        <p class="hint">カードにふわっとした動きを付けました。</p>
+        <button id="toggle-motion" type="button">動きを止める</button>
+      </section>
+
+      <section class="fortune">
+        <p class="hint">ボタンを押して今日の運勢をチェック</p>
+        <div id="fortune-result" class="fortune-display">おみくじを引いてみよう</div>
+        <button id="draw-fortune" type="button">おみくじを引く</button>
+      </section>
+    </main>
+    <script>
+      const card = document.querySelector('.card');
+      const toggleButton = document.getElementById('toggle-motion');
+      const drawFortuneButton = document.getElementById('draw-fortune');
+      const fortuneResult = document.getElementById('fortune-result');
+
+      let angle = 0;
+      let active = true;
+
+      const loop = () => {
+        if (active) {
+          angle += 0.015;
+          const x = Math.cos(angle) * 6;
+          const y = Math.sin(angle) * 6;
+          card.style.transform = `translate(${x}px, ${y}px)`;
+          card.style.boxShadow = `${-y}px ${Math.abs(x) + 12}px 45px rgba(15, 23, 42, 0.45)`;
+        }
+
+        requestAnimationFrame(loop);
+      };
+
+      toggleButton.addEventListener('click', () => {
+        active = !active;
+        toggleButton.textContent = active ? '動きを止める' : '動きを再開する';
+        if (!active) {
+          card.style.transform = 'translate(0, 0)';
+          card.style.boxShadow = '0 18px 45px rgba(15, 23, 42, 0.6)';
+        }
+      });
+
+      const fortunes = [
+        '大吉 — 最高の一日になりそう！',
+        '中吉 — うれしい出来事が訪れる予感。',
+        '小吉 — 穏やかに物事が進みそう。',
+        '吉 — コツコツ続けると結果が出るかも。',
+        '末吉 — チャンスは控えめ、丁寧にいこう。',
+        '凶 — 無理は禁物。休息を大切に。',
+      ];
+
+      drawFortuneButton.addEventListener('click', () => {
+        const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+        fortuneResult.textContent = fortune;
+        fortuneResult.classList.add('flash');
+        setTimeout(() => fortuneResult.classList.remove('flash'), 550);
+      });
+
+      requestAnimationFrame(loop);
+    </script>
   </body>
 </html>
